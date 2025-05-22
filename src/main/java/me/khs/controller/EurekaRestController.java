@@ -3,6 +3,7 @@ package me.khs.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import me.khs.service.BringReceipt;
@@ -21,13 +22,21 @@ public class EurekaRestController {
 		
 	}
 	
-	@GetMapping("getCurrentWeek")
-	public int getReceipt(@AuthenticationPrincipal User userDetails) { // 반환값은 다시 프론트에 넘겨줘야 함. json 객체형태.
-		// AuthenticationPrincipal 이 내부적으로 SecurityContextHolder.getContext().getAuthentication()/getPrincipal()을 사용해 꺼내줌.
+//	@GetMapping("getCurrentWeek")
+//	public int getReceipt(@AuthenticationPrincipal User userDetails) { // 반환값은 다시 프론트에 넘겨줘야 함. json 객체형태.
+//		// AuthenticationPrincipal 이 내부적으로 SecurityContextHolder.getContext().getAuthentication()/getPrincipal()을 사용해 꺼내줌.
+//		
+//		int currentWeek = bringReceipt.getRecipt(userDetails.getUserId());
+//		
+//		return currentWeek;
+//		
+//	}
+	
+	@GetMapping("/getCurrentWeek")
+	public ResponseEntity<?> getStats(@RequestHeader("Authorization") String bearerToken) {
 		
-		int currentWeek = bringReceipt.getRecipt(userDetails.getUserId());
-		
-		return currentWeek;
+		String token = bearerToken.replace("Vearer ", "");
+		Long userId = jwtTokenProvider.getUserIdFromToken(token);
 		
 	}
 
