@@ -12,11 +12,11 @@ import io.jsonwebtoken.security.Keys;
 @Component	// spring의 빈으로 등록되도록 함.
 public class TokenParser {
 	
-	private final String secretKey = "my_super_secret_key_is_this_1234567890"; // 토큰을 만들 때와 같은 비밀 키.
+	private final String secretKey = "w9vM9r6ZKLEFh82N0UbpVYkRIuv2AfxN"; // 토큰을 만들 때와 같은 비밀 키.
 	
 	public Long getUserIdFromToken(String token) {
 		
-		System.out.println("이것은 toke parser 입니다.");
+		System.out.println("이것은 token parser 입니다.");
 		Claims claims = Jwts.parser() // jwt parser를 만드는 진입점. 파서 객체를 구성. 
 				.verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
 				// verifyWith() : jwt 서명을 검증할 키를 설정하는 부분.
@@ -26,7 +26,7 @@ public class TokenParser {
 				.parseSignedClaims(token)   // token문자열을 실제로 파싱하는 부분. jwt 서명이 검증되고 실패하면 예외 발생. jwt의 클레임을 포함한 객체 Jws<Claims>를 반환.
 				.getBody(); // jwt의 payload 영역을 의미. 즉 토큰 내부의 userId, ... 등 클레임을 가져오는 부분. 
 		
-		return claims.get("userId", Long.class);
+		return claims.get("id", Long.class);
 	}
 
 }

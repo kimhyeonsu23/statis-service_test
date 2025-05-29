@@ -54,7 +54,7 @@ public class StatisController {
 		
 		String token = authHeader.replace("Bearer ", "").trim();
 		Long userId = tokenParser.getUserIdFromToken(token);
-		System.out.println("StatisController에서 로그 : " + userId);
+		System.out.println("StatisController - getCurrentWeekController 실행 / 유저 아이디 : " + userId);
 		Long currentWeek = statisService.getCurrentWeekService(userId);
 		
 		return ResponseEntity.ok(currentWeek);
@@ -66,7 +66,7 @@ public class StatisController {
 		
 		String token = authHeader.replace("Bearer ", "").trim();
 		Long userId = tokenParser.getUserIdFromToken(token);
-		System.out.println("statisContriller : calKeywordTotalPrice에서 로그 : " + userId);
+		System.out.println("statisContriller - calKeywordTotalPrice 실행 / 유저 아이디 : " + userId);
 		
 		Map<String, Integer> result = statisService.calKeywordTotalPrice(userId);
 		return ResponseEntity.ok(result);

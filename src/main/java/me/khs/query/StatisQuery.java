@@ -23,23 +23,30 @@ public class StatisQuery {
 	// today는 클래스가 아니라 LocalDate클래스의 객체(변수 이름), 내부적으로는 TemporlAdjusters.previousOrSame(DayOfWeek.MONDAY(가 자동으로 적용.
 	// temporalAdusters는 클래스 : temporalAduster를 생성해주는 정적메서드를 모아둔 유틸 클래스
 	LocalDate now = LocalDate.now();
+
 	
 	public Long getCurrentWeek(Long userId) {
-		
-		System.out.println("statisQuery에서 로그 출력 : " + userId);
-		String sql = "select sum(total_price) from receipt where user_id = ? AND receipt_date BETWEEN ? AND ? ";
-		
-		// queryForObject() : sql을 실행하고 결과가 단 하나의 값일 때 사용.
-		Long totalPrice = jdbcTemplate.queryForObject(sql, Long.class, userId, monday, now);
-		
-		return totalPrice != null ? totalPrice : 0L;
-		
+	    LocalDate today = LocalDate.now();
+	    LocalDate monday = today.with(DayOfWeek.MONDAY);
+	    String sql = "SELECT SUM(total_price) FROM receipt WHERE user_id = ? AND `date` BETWEEN ? AND ?";
+	 // queryForObject() : sql을 실행하고 결과가 단 하나의 값일 때 사용.
+	    Long totalPrice = jdbcTemplate.queryForObject(sql, Long.class, userId, java.sql.Date.valueOf(monday), java.sql.Date.valueOf(today)); // 챗 gpt가 monday를 java.sql...으로 감싸보라고 함.
+	    
+	    System.out.println("🧾 userId: " + userId);
+	    System.out.println("🗓️ monday: " + monday);
+	    System.out.println("🗓️ today: " + today);
+	    System.out.println("🔢 totalPrice: " + totalPrice);
+
+	    
+	    return totalPrice != null ? totalPrice : 0L;
 	}
+
+	
 	
 	public Map<String, Integer> getKeywordTotalPrice(Long userId) {
 	    Map<String, Integer> keywordTotal = new HashMap<>();
 	    String[] keywordNames = {"food", "living", "fashion", "health", "investment", "transportation"};
-	    String sql = "SELECT SUM(total_price) FROM receipt WHERE user_id = ? AND keyword_id = ? AND receipt_date BETWEEN ? AND ?";
+	    String sql = "SELECT SUM(total_price) FROM receipt WHERE user_id = ? AND keyword_id = ? AND `date` BETWEEN ? AND ?";
 
 	    for (int i = 0; i < 6; i++) {
 	        Integer price = jdbcTemplate.queryForObject(sql, Integer.class, userId, i + 1, monday, now);

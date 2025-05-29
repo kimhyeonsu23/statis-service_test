@@ -22,14 +22,14 @@ public class StatisService {
 	
 	public Long getCurrentWeekService(Long userId) {
 		
-		System.out.println("StatisService에서의 로그 : " + userId);
+		System.out.println("StatisService - getCurrentWeekService 실행 / 유저아이디 : " + userId);
 		return statisQuery.getCurrentWeek(userId);
 		
 	}
 	
 	public Map<String, Integer> calKeywordTotalPrice(Long userId) {
 		
-		System.out.println("statisService에서의 로그 : " + userId);
+		System.out.println("statisService - calKeywordTotalPrice 실행 / 유저 아이디 : " + userId);
 		
 		Map<String, Integer> keywordTotal =  statisQuery.getKeywordTotalPrice(userId);
 		return keywordTotal;
