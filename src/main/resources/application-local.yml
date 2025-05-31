@@ -1,0 +1,37 @@
+server:
+  port: 8090
+
+spring:
+  config:
+    activate:
+      on-profile: local  # 이건 local 상태에서 실행된다는 뜻.
+  application:
+    name: statis-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/budget_db?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: budget_user
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa: # 자바에서 db를 다루는 방법을 정해 놓은 인터페이스(규칙) -> spring boot starter data jpa를 사용하면 자동으로 hibernate가 따라와서 구현해줌,
+    hibernate: # 그 규칙을 실제로 구현해주는 진짜 도구, 구현체
+      ddl-auto: update # 데이터베이스 테이블을 어플레케이션 실행 시점에 자동으로 어떻게 다룰지 결정하는 설정.
+# update : 기존 테이블을 유지하면서 필드 변경 사항만 반영.
+    show-sql: true # jpa가 실제로 실행하는 sql쿼리를 콘솔에 출력.
+  jwt:
+    secret: w9vM9r6ZKLEFh82N0UbpVYkRIuv2AfxN
+# 로그 레벨 조정.
+  logging:
+    level:
+      root: DEBUG
+  eureka:
+    client:
+      register-with-eureka: true # 이 서비스를 유레카에 등록.
+      fetch-registry: true # 유레카 서버에서 다른 서비스 목록을 가져옴.
+    service-url:
+      defaultZone: http://localhost:8761/eureka # defaultZone : 유레카 서버의 주소.
+# 유레카 서버에 접속하는 족과 접속 받는 쪽이 url 인식 차이 때문. 위의 url은 클라이언트가 유레카 서버에 등록하거나 조회할 때 사용하는 url (서버의 내부 경로임.)
+# localhost:8761은 웹 브라우저에서 유레카 대시보드를 볼때의 주소.
+    instance:
+      prefer-ip-address: true # 유레카가 도메인 대신 ip 주소 기반으로 인식하도록 하는 옵션.(내부 통신에서 유용)
+
+
