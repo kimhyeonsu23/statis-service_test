@@ -1,10 +1,14 @@
-package me.khs.query;
+package com.budgetmate.query;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.budgetmate.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,6 +49,7 @@ public class StatisQuery {
 	
 	public Map<String, Integer> getKeywordTotalPrice(Long userId) {
 	    Map<String, Integer> keywordTotal = new HashMap<>();
+	    // String 별로 Integer를 저장하는 맵 구조.
 	    String[] keywordNames = {"food", "living", "fashion", "health", "investment", "transportation"};
 	    String sql = "SELECT SUM(total_price) FROM receipt WHERE user_id = ? AND keyword_id = ? AND `date` BETWEEN ? AND ?";
 
@@ -56,8 +61,55 @@ public class StatisQuery {
 	    return keywordTotal;
 	}
 	
+	public List<UserDto> getUserList() {
+		
+		String sql = "select * from user";
+		List<UserDto> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserDto.class));
+// BeanPropertyRowMapper : jdbcTemplate에서 거의 필수적임 : ResultSet의 각 행을 자바 객체로 자동으로 매핑해주는 도우미 클래스.
+// 자바 객체 UserDto로 만들어주는 역할
+// User.class를 넘기는 이유는 ResultSet을 User라는 클래스에 매핑할것이라고 jdbcTemplate에게 알려줌 -> user.class를 넘기면 내부적으로 reflection을 사용해서 setter를 자동으로 실행.
+		return users;
+		
+	}
+	
+	public void updateUser(int lastWeek, int point, Long id) {
+		
+		jdbcTemplate.update("update `user` set point = ?, last_week = ? where id = ?", point, lastWeek, id);
+		
+	}
+	
+	public boolean searchBadgeHistory(Long id, Long badgeId) {
+		
+		String sql = "SELECT 1 FROM history WHERE user_id = ? AND badge_id = ? LIMIT 1"; // 일치하는 행이 하나라도 있으면 숫자 1을 가져오고 즉시 종료.
+		//select 1은 컬럼이나 속성을 가져오는게 아니라 db의 존재 여부만 확인하거나 테스트용으로 1이라는 상수값만 리턴한다는 뜻 => 칼럼이아니라 1만 그냥 반환하고 쿼리를 끝냄.
+		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, id, badgeId); // queryForList : 결과가 List<Map<String, Object>> 형태로 반환됨.
+		return !result.isEmpty();
+// Object 값 : 정수, 문자열, 날짜 등 컬럼 타입에 따라 다름.
+// 참고 : Count(*) 타입은 무조건 정수값으로 리턴되기 때문에 그냥 처음부터 boolean값으로 받을 수 없음.
+	}
+	
+	public void updateHistory(Long id, Long badgeId) {
+		//history : badge_id, user_id, week_start_date, granted_date
+		String sql = "insert into history (badge_id, user_id, week_start_date, granted_date) values (?,?,?,?)";
+		// jdbcTemplate에서는 update() -> insert, update, delete 모두 수행됨.
+		jdbcTemplate.update(sql, badgeId, monday, today);
+		
+	}
+	
+	
+	
+	
+	
+	
 // LocalDate : 클래스:java.time.LocalDate : 날짜를 표현하는 클래스, year-month-day
 // DayOfWeek.MONDAY : java.time.DayOfWeek
+	
+// jdbcTemplate 주요 메서드 차이
+// query() : List<T>를 반환함 / 예시 List<UserDto> : 여러 행을 특정 객체로 매핑할 때
+// queryForList() : List<Map<String, Object>> / List<T> / 예시 List<String> : 1개 칼럼만 뽑고 싶을때 혹은 칼럼이 많지만 map<>형태로 받고 싶을때
+// queryForObject : T(단일결과 1행만 반환) / 예시 String, Integer ... : 결과가 정확히 1행 1열이어야 함.
+	
+	
 
 	
 	

@@ -1,4 +1,4 @@
-package me.khs.service;
+package com.budgetmate.service;
 
 import java.util.Map;
 
@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import me.khs.query.StatisQuery;
+import com.budgetmate.query.StatisQuery;
+
 import reactor.core.publisher.Mono;
 
 @Service
@@ -21,6 +22,7 @@ public class StatisService {
 	}
 	
 	public Long getCurrentWeekService(Long userId) {
+	
 		
 		System.out.println("StatisService - getCurrentWeekService 실행 / 유저아이디 : " + userId);
 		return statisQuery.getCurrentWeek(userId);

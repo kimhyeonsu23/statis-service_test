@@ -17,10 +17,10 @@ spring:
       enabled: false
 # gateway 설정을 끄기.
     gateway:
-      enabled: false
+      enabled: true
 # eureka 설정
     discovery:
-      enabled: false
+      enabled: true
   application:
     name: statis-service
 # circuit-breaker 설정 끄기.

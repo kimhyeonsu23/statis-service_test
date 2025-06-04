@@ -1,4 +1,4 @@
-package me.khs.controller;
+package com.budgetmate.controller;
 
 import java.util.Map;
 
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import me.khs.dto.StatisDto;
-import me.khs.security.TokenParser;
-import me.khs.service.StatisService;
+import com.budgetmate.security.TokenParser;
+import com.budgetmate.service.StatisService;
+
 import reactor.core.publisher.Mono;
 
 

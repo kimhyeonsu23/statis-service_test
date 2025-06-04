@@ -1,4 +1,4 @@
-package me.khs.security;
+package com.budgetmate.security;
 
 import java.nio.charset.StandardCharsets;
 
