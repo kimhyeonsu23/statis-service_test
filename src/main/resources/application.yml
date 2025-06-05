@@ -36,3 +36,7 @@ spring:
     level:
       root: debug
       org.springframework: debug
+jwt:
+  secret: w9vM9r6ZKLEFh82N0UbpVYkRIuv2AfxN
+
+

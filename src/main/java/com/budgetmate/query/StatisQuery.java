@@ -30,6 +30,7 @@ public class StatisQuery {
 
 	
 	public Long getCurrentWeek(Long userId) {
+		System.out.println("5");
 	    LocalDate today = LocalDate.now();
 	    LocalDate monday = today.with(DayOfWeek.MONDAY);
 	    String sql = "SELECT SUM(total_price) FROM receipt WHERE user_id = ? AND `date` BETWEEN ? AND ?";
@@ -40,7 +41,6 @@ public class StatisQuery {
 	    System.out.println("🗓️ monday: " + monday);
 	    System.out.println("🗓️ today: " + today);
 	    System.out.println("🔢 totalPrice: " + totalPrice);
-
 	    
 	    return totalPrice != null ? totalPrice : 0L;
 	}
@@ -63,6 +63,7 @@ public class StatisQuery {
 	
 	public List<UserDto> getUserList() {
 		
+		System.out.println("3 : getUserList 실행 시작 - 유저 목록 반환");
 		String sql = "select * from user";
 		List<UserDto> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserDto.class));
 // BeanPropertyRowMapper : jdbcTemplate에서 거의 필수적임 : ResultSet의 각 행을 자바 객체로 자동으로 매핑해주는 도우미 클래스.
@@ -74,12 +75,14 @@ public class StatisQuery {
 	
 	public void updateUser(int lastWeek, int point, Long id) {
 		
+		System.out.println("updateUser 실행 - 유저 포인트, lastWeek 업데이트 시작");
 		jdbcTemplate.update("update `user` set point = ?, last_week = ? where id = ?", point, lastWeek, id);
 		
 	}
 	
 	public boolean searchBadgeHistory(Long id, Long badgeId) {
 		
+		System.out.println("searchBadgeHistory 실행 시작 - 유저의 뱃지 히스토리 내역을 찾기 시작");
 		String sql = "SELECT 1 FROM history WHERE user_id = ? AND badge_id = ? LIMIT 1"; // 일치하는 행이 하나라도 있으면 숫자 1을 가져오고 즉시 종료.
 		//select 1은 컬럼이나 속성을 가져오는게 아니라 db의 존재 여부만 확인하거나 테스트용으로 1이라는 상수값만 리턴한다는 뜻 => 칼럼이아니라 1만 그냥 반환하고 쿼리를 끝냄.
 		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, id, badgeId); // queryForList : 결과가 List<Map<String, Object>> 형태로 반환됨.
@@ -88,11 +91,16 @@ public class StatisQuery {
 // 참고 : Count(*) 타입은 무조건 정수값으로 리턴되기 때문에 그냥 처음부터 boolean값으로 받을 수 없음.
 	}
 	
-	public void updateHistory(Long id, Long badgeId) {
+	public void updateHistory(Long id, Long badgeId, int badge) {
+		
+		System.out.println("updateHistory - History 테이블 업데이트 시작");
 		//history : badge_id, user_id, week_start_date, granted_date
 		String sql = "insert into history (badge_id, user_id, week_start_date, granted_date) values (?,?,?,?)";
+		String badgeSql = "update user set badge = ? where user_id = ?";
 		// jdbcTemplate에서는 update() -> insert, update, delete 모두 수행됨.
-		jdbcTemplate.update(sql, badgeId, monday, today);
+		jdbcTemplate.update(sql, badgeId, id, monday, today);
+
+		jdbcTemplate.update(badgeSql, badge, id);
 		
 	}
 	

@@ -2,6 +2,7 @@ package com.budgetmate.security;
 
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -12,7 +13,10 @@ import io.jsonwebtoken.security.Keys;
 @Component	// spring의 빈으로 등록되도록 함.
 public class TokenParser {
 	
-	private final String secretKey = "w9vM9r6ZKLEFh82N0UbpVYkRIuv2AfxN"; // 토큰을 만들 때와 같은 비밀 키.
+	//private final String secretKey = "w9vM9r6ZKLEFh82N0UbpVYkRIuv2AfxN"; // 토큰을 만들 때와 같은 비밀 키.
+	
+	@Value("${jwt.secretKey}")
+	private String secretKey;
 	
 	public Long getUserIdFromToken(String token) {
 		
