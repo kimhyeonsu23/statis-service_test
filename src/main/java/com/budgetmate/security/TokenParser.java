@@ -15,7 +15,7 @@ public class TokenParser {
 	
 	//private final String secretKey = "w9vM9r6ZKLEFh82N0UbpVYkRIuv2AfxN"; // 토큰을 만들 때와 같은 비밀 키.
 	
-	@Value("${jwt.secretKey}")
+	@Value("${jwt.secret}")
 	private String secretKey;
 	
 	public Long getUserIdFromToken(String token) {

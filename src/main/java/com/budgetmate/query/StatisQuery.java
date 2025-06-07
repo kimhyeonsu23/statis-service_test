@@ -96,7 +96,7 @@ public class StatisQuery {
 		System.out.println("updateHistory - History 테이블 업데이트 시작");
 		//history : badge_id, user_id, week_start_date, granted_date
 		String sql = "insert into history (badge_id, user_id, week_start_date, granted_date) values (?,?,?,?)";
-		String badgeSql = "update user set badge = ? where user_id = ?";
+		String badgeSql = "update user set badge = ? where id = ?";
 		// jdbcTemplate에서는 update() -> insert, update, delete 모두 수행됨.
 		jdbcTemplate.update(sql, badgeId, id, monday, today);
 
